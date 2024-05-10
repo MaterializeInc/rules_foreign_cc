@@ -68,6 +68,12 @@ def _make_tool_impl(ctx):
         # flags list.
         absolute_ar = absolutize(ctx.workspace_name, ar_path, True)
         arflags = [e for e in frozen_arflags]
+
+        # HACK(parkmycar): We fail to bootstrap make with libtool on macOS, but we know our
+        # toolchain includes llvm-ar which works, so we manually specify that.
+        if os_name(ctx) == "macos" and absolute_ar.endswith("libtool"):
+            absolute_ar = absolute_ar.replace("libtool", "llvm-ar")
+
         if absolute_ar == "libtool" or absolute_ar.endswith("/libtool"):
             arflags.append("-o")
 
@@ -75,7 +81,7 @@ def _make_tool_impl(ctx):
             non_sysroot_ldflags += ["-undefined", "error"]
 
         env.update({
-            "AR": "",
+            "AR": absolute_ar,
             "ARFLAGS": _join_flags_list(ctx.workspace_name, arflags),
             "CC": absolute_cc,
             "CFLAGS": _join_flags_list(ctx.workspace_name, non_sysroot_cflags),
