@@ -98,12 +98,34 @@ def _make_toolchain(version, register_toolchains):
                 "http://ftpmirror.gnu.org/gnu/make/make-4.4.1.tar.gz",
             ],
         )
+        maybe(
+            http_archive,
+            name = "gnumake_src_linux",
+            build_file_content = _ALL_CONTENT,
+            sha256 = "dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3",
+            strip_prefix = "make-4.4.1",
+            urls = [
+                "https://mirror.bazel.build/ftpmirror.gnu.org/gnu/make/make-4.4.1.tar.gz",
+                "http://ftpmirror.gnu.org/gnu/make/make-4.4.1.tar.gz",
+            ],
+        )
         return
 
     if version == "4.4":
         maybe(
             http_archive,
             name = "gnumake_src",
+            build_file_content = _ALL_CONTENT,
+            sha256 = "581f4d4e872da74b3941c874215898a7d35802f03732bdccee1d4a7979105d18",
+            strip_prefix = "make-4.4",
+            urls = [
+                "https://mirror.bazel.build/ftpmirror.gnu.org/gnu/make/make-4.4.tar.gz",
+                "http://ftpmirror.gnu.org/gnu/make/make-4.4.tar.gz",
+            ],
+        )
+        maybe(
+            http_archive,
+            name = "gnumake_src_linux",
             build_file_content = _ALL_CONTENT,
             sha256 = "581f4d4e872da74b3941c874215898a7d35802f03732bdccee1d4a7979105d18",
             strip_prefix = "make-4.4",
@@ -126,6 +148,18 @@ def _make_toolchain(version, register_toolchains):
                 "http://ftpmirror.gnu.org/gnu/make/make-4.3.tar.gz",
             ],
         )
+        maybe(
+            http_archive,
+            name = "gnumake_src_linux",
+            build_file_content = _ALL_CONTENT,
+            patches = [Label("//toolchains:make-reproducible-bootstrap.patch")],
+            sha256 = "e05fdde47c5f7ca45cb697e973894ff4f5d79e13b750ed57d7b66d8defc78e19",
+            strip_prefix = "make-4.3",
+            urls = [
+                "https://mirror.bazel.build/ftpmirror.gnu.org/gnu/make/make-4.3.tar.gz",
+                "http://ftpmirror.gnu.org/gnu/make/make-4.3.tar.gz",
+            ],
+        )
         return
     if version == "4.2":
         maybe(
@@ -134,9 +168,20 @@ def _make_toolchain(version, register_toolchains):
             build_file_content = _ALL_CONTENT,
             sha256 = "e968ce3c57ad39a593a92339e23eb148af6296b9f40aa453a9a9202c99d34436",
             strip_prefix = "make-4.2",
-            urls = [
-                "https://ftp.gnu.org/gnu/make/make-4.2.tar.gz",
-            ],
+            urls = ["https://ftp.gnu.org/gnu/make/make-4.2.tar.gz"],
+        )
+
+        # On Linux make 4.2 fails to build because of missing symbols so we patch it.
+        #
+        # See: <https://stackoverflow.com/questions/51675200/install-older-version-of-gnu-make-in-ubuntu-18-04> 
+        maybe(
+            http_archive,
+            name = "gnumake_src_linux",
+            build_file_content = _ALL_CONTENT,
+            patches = [Label("//toolchains:make-4_2-undefined-reference.patch")],
+            sha256 = "e968ce3c57ad39a593a92339e23eb148af6296b9f40aa453a9a9202c99d34436",
+            strip_prefix = "make-4.2",
+            urls = ["https://ftp.gnu.org/gnu/make/make-4.2.tar.gz"],
         )
         return
 

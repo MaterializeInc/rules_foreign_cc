@@ -22,7 +22,10 @@ native_tool_toolchain(
 
 make_tool(
     name = "make_tool",
-    srcs = "@gnumake_src//:all_srcs",
+    srcs = select({
+        "@platforms//os:linux": "@gnumake_src_linux//:all_srcs",
+        "//conditions:default": "@gnumake_src//:all_srcs",
+    }),
     tags = ["manual"],
 )
 
