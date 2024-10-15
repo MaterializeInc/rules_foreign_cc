@@ -168,7 +168,10 @@ def _make_toolchain(version, register_toolchains):
             build_file_content = _ALL_CONTENT,
             sha256 = "e968ce3c57ad39a593a92339e23eb148af6296b9f40aa453a9a9202c99d34436",
             strip_prefix = "make-4.2",
-            urls = ["https://ftp.gnu.org/gnu/make/make-4.2.tar.gz"],
+            urls = [
+                "https://github.com/MaterializeInc/toolchains/releases/download/make-4.2/make-4.2.tar.gz",
+                "https://ftp.gnu.org/gnu/make/make-4.2.tar.gz",
+            ],
         )
 
         # On Linux make 4.2 fails to build because of missing symbols so we patch it.
@@ -181,7 +184,10 @@ def _make_toolchain(version, register_toolchains):
             patches = [Label("//toolchains:make-4_2-undefined-reference.patch")],
             sha256 = "e968ce3c57ad39a593a92339e23eb148af6296b9f40aa453a9a9202c99d34436",
             strip_prefix = "make-4.2",
-            urls = ["https://ftp.gnu.org/gnu/make/make-4.2.tar.gz"],
+            urls = [
+                "https://github.com/MaterializeInc/toolchains/releases/download/make-4.2/make-4.2.tar.gz",
+                "https://ftp.gnu.org/gnu/make/make-4.2.tar.gz",
+            ],
         )
         return
 
